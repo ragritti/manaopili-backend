@@ -1,0 +1,8 @@
+node_modules/
+npm-debug.log
+.env
+docker-compose.yml
+dockerfile
+.dockerignore
+.vercel
+package-lock.json
