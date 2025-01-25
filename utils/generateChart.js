@@ -102,187 +102,341 @@ async function generateITSMInvestmentScoresChart(peopleAverages, processAverages
     return imageBuffer;
 }
 
+// async function generateOverallITSMModuleChart(overallITSMModule, title) {
+//     const configuration = {
+//         type: 'bar',
+//         data: {
+//           labels: [
+//              'People','Process','Technology','Aggregated Score'
+//        ],
+//             datasets: [
+//                 {
+//                     label: 'People',
+//                     data: [overallITSMModule.overallPeople],
+//                     backgroundColor: '#455CFF',
+//                     barPercentage: 0.2, // Adjusts individual bar width
+//                     categoryPercentage: 1, // Adjusts group width
+//                 },
+//                 {
+//                     label: 'Process',
+//                     data: [overallITSMModule.overallProcess],
+//                     backgroundColor: '#D9D9D9',
+//                     barPercentage: 0.2, // Adjusts individual bar width
+//                     categoryPercentage: 1, // Adjusts group width
+//                 },
+//                 {
+//                     label: 'Technology',
+//                     data: [overallITSMModule.overallTechnology],
+//                     backgroundColor: '#141414',
+//                     barPercentage: 0.2, // Adjusts individual bar width
+//                     categoryPercentage: 1, // Adjusts group width
+//                 },
+//                 {
+//                     label: 'Aggregated Score',
+//                     data: [overallITSMModule.overallScore],
+//                     backgroundColor: '#DEFF00',
+//                     barPercentage: 0.2, // Adjusts individual bar width
+//                     categoryPercentage: 1, // Adjusts group width
+//                 }
+//             ]
+//         },
+//         plugins: [ChartDataLabels],
+//         options: {
+//             plugins: {
+//                 title: {
+//                     display: true,
+//                     text: title,
+//                     font: {
+//                         color: '#000000',
+//                         size: 46,
+//                     },
+//                 },
+//                 legend: { position: 'top', labels: { boxWidth: 30, padding: 10, font: { size: 34 }, color: '#000' } },
+//                 datalabels: {
+//                     display: true,
+//                     anchor: 'end',
+//                     align: 'top',
+//                     color: 'black',
+//                     font: {
+//                         size: 30,
+                       
+//                     },
+//                     formatter: function(value){
+//                         return value.toFixed(2);
+//                     },
+//                 },
+//             },
+//             scales: {
+//                 y: {
+//                     min: 0,
+//                     max: 6,
+//                     beginAtZero: true,
+//                     ticks: {
+//                         stepSize: 1,
+//                         font: {
+//                             size: 24,
+//                         },
+//                         color: '#000000',
+//                         padding: 10,
+//                     },
+//                 },
+//                 x: {
+//                     ticks: {
+//                         font: {
+//                             size: 32,
+//                         },
+//                         color: '#000000',
+                       
+//                     },
+//                 },
+//             },
+//         },
+//     };
+
+//     const imageBuffer = await chartJSNodeCanvas.renderToBuffer(configuration);
+//     return imageBuffer;
+// }
 async function generateOverallITSMModuleChart(overallITSMModule, title) {
-    const configuration = {
-        type: 'bar',
-        data: {
-          labels: [
-            `         People                                    Process                               Technology                       Aggregated Score`
-       ],
-            datasets: [
-                {
-                    label: 'People',
-                    data: [overallITSMModule.overallPeople],
-                    backgroundColor: '#455CFF',
-                    barPercentage: 0.2, // Adjusts individual bar width
-                    categoryPercentage: 1, // Adjusts group width
-                },
-                {
-                    label: 'Process',
-                    data: [overallITSMModule.overallProcess],
-                    backgroundColor: '#D9D9D9',
-                    barPercentage: 0.2, // Adjusts individual bar width
-                    categoryPercentage: 1, // Adjusts group width
-                },
-                {
-                    label: 'Technology',
-                    data: [overallITSMModule.overallTechnology],
-                    backgroundColor: '#141414',
-                    barPercentage: 0.2, // Adjusts individual bar width
-                    categoryPercentage: 1, // Adjusts group width
-                },
-                {
-                    label: 'Aggregated Score',
-                    data: [overallITSMModule.overallScore],
-                    backgroundColor: '#DEFF00',
-                    barPercentage: 0.2, // Adjusts individual bar width
-                    categoryPercentage: 1, // Adjusts group width
-                }
-            ]
-        },
-        plugins: [ChartDataLabels],
-        options: {
-            plugins: {
-                title: {
-                    display: true,
-                    text: title,
-                    font: {
-                        color: '#000000',
-                        size: 46,
-                    },
-                },
-                legend: { position: 'top', labels: { boxWidth: 30, padding: 10, font: { size: 34 }, color: '#000' } },
-                datalabels: {
-                    display: true,
-                    anchor: 'end',
-                    align: 'top',
-                    color: 'black',
-                    font: {
-                        size: 30,
-                       
-                    },
-                    formatter: function(value){
-                        return value.toFixed(2);
-                    },
-                },
-            },
-            scales: {
-                y: {
-                    min: 0,
-                    max: 6,
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1,
-                        font: {
-                            size: 24,
-                        },
-                        color: '#000000',
-                        padding: 10,
-                    },
-                },
-                x: {
-                    ticks: {
-                        font: {
-                            size: 32,
-                        },
-                        color: '#000000',
-                       
-                    },
-                },
-            },
-        },
-    };
+  const configuration = {
+      type: 'bar',
+      data: {
+          labels: ['People', 'Process', 'Technology', 'Aggregated Score'], // X-axis labels
+          datasets: [
+              {
+                  label: 'ITSM Module Score',
+                  data: [
+                      overallITSMModule.overallPeople, 
+                      overallITSMModule.overallProcess, 
+                      overallITSMModule.overallTechnology, 
+                      overallITSMModule.overallScore
+                  ], // Corresponding Y-axis values
+                  backgroundColor: ['#455CFF', '#D9D9D9', '#141414', '#DEFF00'], // Color for each bar
+                  barPercentage: 0.5, // Adjusts individual bar width
+                  categoryPercentage: 0.8, // Adjusts group width
+              },
+          ],
+      },
+      plugins: [ChartDataLabels],
+      options: {
+          plugins: {
+              title: {
+                  display: true,
+                  text: title,
+                  font: {
+                      size: 46,
+                  },
+                  color: '#000000',
+              },
+              legend: {
+                  display: false, // Hide legend as it is redundant with one dataset
+              },
+              datalabels: {
+                  display: true,
+                  anchor: 'end',
+                  align: 'top',
+                  color: 'black',
+                  font: {
+                      size: 30,
+                  },
+                  formatter: function (value) {
+                      return value.toFixed(2);
+                  },
+              },
+          },
+          scales: {
+              y: {
+                  min: 0,
+                  max: 6,
+                  beginAtZero: true,
+                  ticks: {
+                      stepSize: 1,
+                      font: {
+                          size: 24,
+                      },
+                      color: '#000000',
+                      padding: 10,
+                  },
+              },
+              x: {
+                  ticks: {
+                      font: {
+                          size: 32,
+                      },
+                      color: '#000000',
+                  },
+              },
+          },
+      },
+  };
 
-    const imageBuffer = await chartJSNodeCanvas.renderToBuffer(configuration);
-    return imageBuffer;
+  const imageBuffer = await chartJSNodeCanvas.renderToBuffer(configuration);
+  return imageBuffer;
 }
 
-async function generateCurrentlyImplementedITSMModulesChart(currentlyImplementedITSMModules, title) {
-    const configuration = {
-        type: 'bar',
-        data: {
-          labels: [
-            `         People                                    Process                               Technology                       Aggregated Score`
-       ],
-            datasets: [
-                {
-                    label: 'People',
-                    data: [currentlyImplementedITSMModules.implementedPeople],
-                    backgroundColor: '#455CFF',
-                    barPercentage: 0.2, // Adjusts individual bar width
-                    categoryPercentage: 1, // Adjusts group width
-                },
-                {
-                    label: 'Process',
-                    data: [currentlyImplementedITSMModules.implementedProcess],
-                    backgroundColor: '#D9D9D9',
-                    barPercentage: 0.2, // Adjusts individual bar width
-                    categoryPercentage: 1, // Adjusts group width
-                },
-                {
-                    label: 'Technology',
-                    data: [currentlyImplementedITSMModules.implementedTechnology],
-                    backgroundColor: '#141414',
-                    barPercentage: 0.2, // Adjusts individual bar width
-                    categoryPercentage: 1, // Adjusts group width
-                },
-                {
-                    label: 'Aggregated Score',
-                    data: [currentlyImplementedITSMModules.implementedScore],
-                    backgroundColor: '#DEFF00',
-                    barPercentage: 0.2, // Adjusts individual bar width
-                    categoryPercentage: 1, // Adjusts group width
-                }
-            ]
-        },
-        plugins: [ChartDataLabels],
-        options: {
-            plugins: {
-              legend: { position: 'top', labels: { boxWidth: 30, padding: 10, font: { size: 34 }, color: '#000' } },
-                datalabels: {
-                    display: true,
-                    anchor: 'end',
-                    align: 'top',
-                    color: 'black',
-                    font: {
-                        size: 30,
+
+// async function generateCurrentlyImplementedITSMModulesChart(currentlyImplementedITSMModules, title) {
+//     const configuration = {
+//         type: 'bar',
+//         data: {
+//           labels: [
+//             `         People                                    Process                               Technology                       Aggregated Score`
+//        ],
+//             datasets: [
+//                 {
+//                     label: 'People',
+//                     data: [currentlyImplementedITSMModules.implementedPeople],
+//                     backgroundColor: '#455CFF',
+//                     barPercentage: 0.2, // Adjusts individual bar width
+//                     categoryPercentage: 1, // Adjusts group width
+//                 },
+//                 {
+//                     label: 'Process',
+//                     data: [currentlyImplementedITSMModules.implementedProcess],
+//                     backgroundColor: '#D9D9D9',
+//                     barPercentage: 0.2, // Adjusts individual bar width
+//                     categoryPercentage: 1, // Adjusts group width
+//                 },
+//                 {
+//                     label: 'Technology',
+//                     data: [currentlyImplementedITSMModules.implementedTechnology],
+//                     backgroundColor: '#141414',
+//                     barPercentage: 0.2, // Adjusts individual bar width
+//                     categoryPercentage: 1, // Adjusts group width
+//                 },
+//                 {
+//                     label: 'Aggregated Score',
+//                     data: [currentlyImplementedITSMModules.implementedScore],
+//                     backgroundColor: '#DEFF00',
+//                     barPercentage: 0.2, // Adjusts individual bar width
+//                     categoryPercentage: 1, // Adjusts group width
+//                 }
+//             ]
+//         },
+//         plugins: [ChartDataLabels],
+//         options: {
+//             plugins: {
+//               legend: { position: 'top', labels: { boxWidth: 30, padding: 10, font: { size: 34 }, color: '#000' } },
+//                 datalabels: {
+//                     display: true,
+//                     anchor: 'end',
+//                     align: 'top',
+//                     color: 'black',
+//                     font: {
+//                         size: 30,
                        
-                    },
-                    formatter: function(value) {
-                        return value.toFixed(2);
-                    },
-                },
-            },
-            scales: {
-                y: {
-                    min: 0,
-                    max: 6,
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1,
-                        font: {
-                            size: 24,
-                        },
-                        color: '#000000',
-                        padding: 10,
-                    },
-                },
-                x: {
-                    ticks: {
-                        font: {
-                            size: 32,
-                        },
-                        color: '#000000',
+//                     },
+//                     formatter: function(value) {
+//                         return value.toFixed(2);
+//                     },
+//                 },
+//             },
+//             scales: {
+//                 y: {
+//                     min: 0,
+//                     max: 6,
+//                     beginAtZero: true,
+//                     ticks: {
+//                         stepSize: 1,
+//                         font: {
+//                             size: 24,
+//                         },
+//                         color: '#000000',
+//                         padding: 10,
+//                     },
+//                 },
+//                 x: {
+//                     ticks: {
+//                         font: {
+//                             size: 32,
+//                         },
+//                         color: '#000000',
                      
-                    },
-                },
-            },
-        },
-    };
+//                     },
+//                 },
+//             },
+//         },
+//     };
 
-    const imageBuffer = await chartJSNodeCanvas.renderToBuffer(configuration);
-    return imageBuffer;
+//     const imageBuffer = await chartJSNodeCanvas.renderToBuffer(configuration);
+//     return imageBuffer;
+// }
+async function generateCurrentlyImplementedITSMModulesChart(currentlyImplementedITSMModules, title) {
+  const configuration = {
+      type: 'bar',
+      data: {
+          labels: ['People', 'Process', 'Technology', 'Aggregated Score'], // X-axis labels
+          datasets: [
+              {
+                  label: 'Currently Implemented ITSM Modules',
+                  data: [
+                      currentlyImplementedITSMModules.implementedPeople,
+                      currentlyImplementedITSMModules.implementedProcess,
+                      currentlyImplementedITSMModules.implementedTechnology,
+                      currentlyImplementedITSMModules.implementedScore
+                  ], // Corresponding Y-axis values
+                  backgroundColor: ['#455CFF', '#D9D9D9', '#141414', '#DEFF00'], // Color for each bar
+                  barPercentage: 0.5, // Adjusts individual bar width
+                  categoryPercentage: 0.8, // Adjusts group width
+              },
+          ],
+      },
+      plugins: [ChartDataLabels],
+      options: {
+          plugins: {
+              title: {
+                  display: true,
+                  text: title,
+                  font: {
+                      size: 46,
+                  },
+                  color: '#000000',
+              },
+              legend: {
+                  display: false, // Hide legend since there's one dataset
+              },
+              datalabels: {
+                  display: true,
+                  anchor: 'end',
+                  align: 'top',
+                  color: 'black',
+                  font: {
+                      size: 30,
+                  },
+                  formatter: function (value) {
+                      return value.toFixed(2);
+                  },
+              },
+          },
+          scales: {
+              y: {
+                  min: 0,
+                  max: 6,
+                  beginAtZero: true,
+                  ticks: {
+                      stepSize: 1,
+                      font: {
+                          size: 24,
+                      },
+                      color: '#000000',
+                      padding: 10,
+                  },
+              },
+              x: {
+                  ticks: {
+                      font: {
+                          size: 32,
+                      },
+                      color: '#000000',
+                  },
+              },
+          },
+      },
+  };
+
+  const imageBuffer = await chartJSNodeCanvas.renderToBuffer(configuration);
+  return imageBuffer;
 }
+
 
 module.exports = {
     generateITSMInvestmentScoresChart,

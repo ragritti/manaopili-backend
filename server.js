@@ -19,22 +19,35 @@ app.use(compression());
 app.use(express.static(path.join(__dirname, 'client/build')));
 
 // MongoDB DataBase connection
-const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/your_db_name';
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('MongoDB connection error:', err));
+// const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/your_db_name';
+// mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+//   .then(() => console.log('MongoDB connected'))
+//   .catch(err => console.error('MongoDB connection error:', err));
 
 // Nodemailer transporter setup
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER || 'your_email@gmail.com',
-    pass: process.env.EMAIL_PASS || 'your_password'
+    user: 'rittirag@gmail.com',
+    pass: 'ahno uisr cmbt jvss'
   }
 });
+// const transporter = nodemailer.createTransport({
+//   host: 'smtp.office365.com',
+//   port: 587,
+//   secure: false, // Use TLS
+//   auth: {
+//     user: 'info@manaopili.com',
+//     pass: 'Manaopili@2025'
+//   },
+//   tls: {
+//     ciphers: 'SSLv3'
+//   }
+// });
 
 // Queue email sending to handle in a separate process if needed
 async function queueEmailSending(mailOptions) {
+  console.log('Queueing email:', mailOptions);
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.error('Error sending email:', error);
@@ -63,15 +76,15 @@ async function processFormData(OrganizationName, email, people, process, technol
 
     // Offload email sending to a background task
     queueEmailSending({
-      from: 'jothi@cuion.in',
-      to: 'mike.yee@manaopili.com',
-      cc:'sranav@cuion.in',
+      from: 'rittirag@gmail.com',
+      to: 'shreyaskashyap2002@gmail.com,mike.yee@manaopili.com,leilani@manaopili.com',
+      cc:'raghu@manaopili.com',
       subject: `Digital Transformation Technology (ITSM) Workflows Report for ${OrganizationName}`,
       html: `<p>Thank you for taking the Digital Trip Survey for Technology Workflows (ITSM).</p>
   
           <p>We hope that you will find the attached report useful in determining your next Digital Transformation steps.</p>
   
-          <p>Our team is available if you would like to <a href="https://calendly.com/manaopili">schedule</a> a walk-through of your report, or if you are interested in getting a detailed Digital Trip Survey report complete with specific recommendations.</p>
+          <p>Our team is available if you would like to <a href="https://outlook.office.com/bookwithme/user/2d20486392d94cf9b823bc508a230121@manaopili.com/meetingtype/DxI_vD9gjkeIW8tY5UxRYQ2?anonymous&ep=mLinkFromTile">schedule</a> a walk-through of your report, or if you are interested in getting a detailed Digital Trip Survey report complete with specific recommendations.</p>
   
           <p>If you have any questions, please feel free to contact us.</p>
   
@@ -93,27 +106,27 @@ async function processFormData(OrganizationName, email, people, process, technol
 app.post('/api/submit-form', async (req, res) => {
   console.log('Incoming form data:', req.body);
   try {
-      const { OrganizationName, email, people, process, technology } = req.body;
+    const { OrganizationName, email, people, process, technology } = req.body;
 
-      if (!OrganizationName) {
-          return res.status(400).json({ success: false, message: "Name is required" });
-      }
+    if (!OrganizationName) {
+      console.error('Error: Missing OrganizationName');
+      return res.status(400).json({ success: false, message: "Name is required" });
+    }
 
-      // Save form data to MongoDB
-      const formData = new FormData({ OrganizationName, email, people, process, technology });
-      await formData.save();
+    console.log('Saving form data to database');
+    // const formData = new FormData({ OrganizationName, email, people, process, technology });
+    // await formData.save();
 
-      // Send an immediate response to the client
-      res.json({ success: true, message: 'Data received. Your report will be generated and emailed shortly.' });
+    res.json({ success: true, message: 'Data received. Your report will be generated and emailed shortly.' });
 
-      // Perform the rest of the processing in the background
-      processFormData(OrganizationName, email, people, process, technology);
-
+    console.log('Processing form data in the background');
+    processFormData(OrganizationName, email, people, process, technology);
   } catch (error) {
-      console.error('Error processing request:', error);
-      res.status(500).json({ success: false, message: 'Internal server error' });
+    console.error('Error processing request:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });
+
 
 // Route: Health check
 app.get('/', (req, res) => {
