@@ -18,11 +18,12 @@ app.use(bodyParser.json());
 app.use(compression());
 app.use(express.static(path.join(__dirname, 'client/build')));
 
-// MongoDB DataBase connection
-// const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/your_db_name';
-// mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-//   .then(() => console.log('MongoDB connected'))
-//   .catch(err => console.error('MongoDB connection error:', err));
+//MongoDB DataBase connection
+const mongoURI = process.env.MONGODB_CONNECTION_STRING || 'mongodb://localhost:27017/your_db_name';
+console.log('Connecting to MongoDB:', mongoURI);
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
 // Nodemailer transporter setup
 const transporter = nodemailer.createTransport({
@@ -38,7 +39,7 @@ const transporter = nodemailer.createTransport({
 //   secure: false, // Use TLS
 //   auth: {
 //     user: 'info@manaopili.com',
-//     pass: 'Manaopili@2025'
+//     pass: 'Elonmusk@188'
 //   },
 //   tls: {
 //     ciphers: 'SSLv3'
@@ -77,8 +78,8 @@ async function processFormData(OrganizationName, email, people, process, technol
     // Offload email sending to a background task
     queueEmailSending({
       from: 'rittirag@gmail.com',
-      to: 'shreyaskashyap2002@gmail.com,mike.yee@manaopili.com,leilani@manaopili.com',
-      cc:'raghu@manaopili.com',
+      to: 'shreyaskashyap2002@gmail.com',
+      cc:'',
       subject: `Digital Transformation Technology (ITSM) Workflows Report for ${OrganizationName}`,
       html: `<p>Thank you for taking the Digital Trip Survey for Technology Workflows (ITSM).</p>
   
@@ -98,7 +99,7 @@ async function processFormData(OrganizationName, email, people, process, technol
       }]
   });
   } catch (error) {
-    console.error('Error processing form data:', error);
+    console.error('Error processing form data:', error);    
   }
 }
 
@@ -114,14 +115,15 @@ app.post('/api/submit-form', async (req, res) => {
     }
 
     console.log('Saving form data to database');
-    // const formData = new FormData({ OrganizationName, email, people, process, technology });
-    // await formData.save();
+    const formData = new FormData({ OrganizationName, email, people, process, technology });
+    await formData.save();
 
     res.json({ success: true, message: 'Data received. Your report will be generated and emailed shortly.' });
 
     console.log('Processing form data in the background');
     processFormData(OrganizationName, email, people, process, technology);
   } catch (error) {
+
     console.error('Error processing request:', error);
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
