@@ -8,6 +8,7 @@ const compression = require('compression');
 const { generatePDF } = require('./utils/generatePDF');
 const { calculateAverages, calculateOverall, calculateOverallITSMModule, calculateCurrentlyImplementedITSMModules } = require('./utils/calculateAverages');
 const FormData = require('./models/FormData'); // Import the FormData model
+const ErrorFormData = require('./models/ErrorFormData');
 
 const app = express();
 require('dotenv').config();
@@ -29,8 +30,8 @@ mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'rittirag@gmail.com',
-    pass: 'ahno uisr cmbt jvss'
+    user: 'manaopili.info@gmail.com',
+    pass: process.env.GMAIL_APP_PASSWORD
   }
 });
 // const transporter = nodemailer.createTransport({
@@ -38,8 +39,8 @@ const transporter = nodemailer.createTransport({
 //   port: 587,
 //   secure: false, // Use TLS
 //   auth: {
-//     user: 'info@manaopili.com',
-//     pass: 'Elonmusk@188'
+//     user: 'rittirag@manaopili.com',
+//     pass: 'Hockeymana@18fsasd'
 //   },
 //   tls: {
 //     ciphers: 'SSLv3'
@@ -47,13 +48,19 @@ const transporter = nodemailer.createTransport({
 // });
 
 // Queue email sending to handle in a separate process if needed
-async function queueEmailSending(mailOptions) {
+async function queueEmailSending(mailOptions, OrganizationName, email, people, process, technology) {
   console.log('Queueing email:', mailOptions);
-  transporter.sendMail(mailOptions, (error, info) => {
+  transporter.sendMail(mailOptions, async (error, info) => {
     if (error) {
       console.error('Error sending email:', error);
+      const error_message = error.message || 'Unknown error';
+      // Save error message to database
+      const errorFormData = new ErrorFormData({ email, OrganizationName, people, process, technology, error_message });
+      await errorFormData.save()
+
     } else {
       console.log('Email sent:', info.response);
+
     }
   });
 }
@@ -76,12 +83,13 @@ async function processFormData(OrganizationName, email, people, process, technol
     const pdfBuffer = await generatePDF(OrganizationName, email, peopleAverages, processAverages, technologyAverages, overallScores, overallITSMModule, currentlyImplementedITSMModules);
 
     // Offload email sending to a background task
-    queueEmailSending({
-      from: 'rittirag@gmail.com',
-      to: 'shreyaskashyap2002@gmail.com',
-      cc:'',
-      subject: `Digital Transformation Technology (ITSM) Workflows Report for ${OrganizationName}`,
-      html: `<p>Thank you for taking the Digital Trip Survey for Technology Workflows (ITSM).</p>
+    queueEmailSending(
+      {
+        from: 'manaopili.info@gmail.com',
+        to: `shreyaskashyap2002.2@gmail.com,rittirag@gmail.com,leilani@manaopili.com,mikeyee@manaopili.com,${email}`,
+        cc: 'raghu@manaopili.com',
+        subject: `Digital Transformation Technology (ITSM) Workflows Report for ${OrganizationName}`,
+        html: `<p>Thank you for taking the Digital Trip Survey for Technology Workflows (ITSM).</p>
   
           <p>We hope that you will find the attached report useful in determining your next Digital Transformation steps.</p>
   
@@ -92,14 +100,18 @@ async function processFormData(OrganizationName, email, people, process, technol
           <p>Mahalo,<br>
           Mana'o Pili, LLC</p>
       `,
-      attachments: [{
+        attachments: [{
           filename: 'report.pdf',
           content: pdfBuffer,
           contentType: 'application/pdf'
-      }]
-  });
+        }]
+      }, OrganizationName, email, people, process, technology);
   } catch (error) {
-    console.error('Error processing form data:', error);    
+    console.log('Error:', error);
+    const error_message = error.message || 'Unknown error';
+    // Save error message to database
+    const errorFormData = new ErrorFormData({ email, OrganizationName, people, process, technology, error_message });
+    await errorFormData.save()
   }
 }
 

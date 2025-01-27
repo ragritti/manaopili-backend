@@ -1,9 +1,7 @@
-// models/FormData.js
-
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const FormDataSchema = new Schema({
+const ErrorFormDataSchema = new Schema({
   email: String,
   OrganizationName: String,
   people: {
@@ -20,11 +18,11 @@ const FormDataSchema = new Schema({
     standard: [Number],
     professional: [Number],
     enterprise: [Number]
-  }
+  },
+  error_message: String,
   
 },{
   timestamps: true
-
 });
 
-module.exports = mongoose.model('FormData', FormDataSchema);
+module.exports = mongoose.model('ErrorFormData', ErrorFormDataSchema);
