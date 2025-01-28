@@ -86,7 +86,7 @@ async function processFormData(OrganizationName, email, people, process, technol
     queueEmailSending(
       {
         from: 'manaopili.info@gmail.com',
-        to: `shreyaskashyap2002.2@gmail.com,rittirag@gmail.com,leilani@manaopili.com,mikeyee@manaopili.com,${email}`,
+        to: `rittirag@manaopili.com,leilani@manaopili.com,mike.yee@manaopili.com,${email}`,
         cc: 'raghu@manaopili.com',
         subject: `Digital Transformation Technology (ITSM) Workflows Report for ${OrganizationName}`,
         html: `<p>Thank you for taking the Digital Trip Survey for Technology Workflows (ITSM).</p>
